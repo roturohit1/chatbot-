@@ -1,6 +1,14 @@
 import requests
 import subprocess
-
+from enum import Enum
+class StatusEnum(Enum):
+    PROCESSING = "processing"
+    COMPLETED = "completed"
+    FAILED = "failed"
+    
+    @classmethod 
+    def choices(cls):
+        return [(key.value, key.name) for key in cls]  
 
 def ask_ollama(prompt: str) -> str:
     r = requests.post(
