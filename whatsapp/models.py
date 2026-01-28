@@ -2,6 +2,7 @@ from django.db import models
 import uuid 
 from django.conf import settings
 from django.utils import timezone
+from .utils import * 
 
 
 
@@ -31,6 +32,8 @@ class Conversation(models.Model):
     time_taken_seconds = models.FloatField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    status = models.CharField(max_length=30,choices=StatusEnum.choices(),default="processing")
 
     def __str__(self):
         return f"{self.user or 'Anonymous'} - {self.created_at}"
+    
