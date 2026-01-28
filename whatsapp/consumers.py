@@ -13,6 +13,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         await self.send_json({"status": "thinking"})
 
+
+
         # run blocking ollama in thread
         answer = await asyncio.to_thread(self.ask_ollama, question)
 
