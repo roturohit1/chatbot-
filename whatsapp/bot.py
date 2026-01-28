@@ -17,7 +17,7 @@ def ask_ollama(user_message):
     response = requests.post(
         settings.OLLAMA_URL,
         json=payload,
-        timeout=60
+        timeout = 60
     )
 
     return response.json().get("response", "Sorry, I cannot answer right now.")
