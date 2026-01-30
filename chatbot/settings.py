@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'whatsapp',
     'chatbot',
     "corsheaders",
+    "AI"
 
 ]
 
@@ -158,3 +159,12 @@ CELERY_TASK_SERIALIZER = "json"
 # channels
 ASGI_APPLICATION = "chatbot.asgi.application"
 INSTALLED_APPS += ["channels"]
+
+
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+        # Use Redis in production
+    }
+}

@@ -1,33 +1,25 @@
-import json
-from channels.generic.websocket import WebsocketConsumer
-from django.contrib.auth.models import AnonymousUser
+# ai/consumers.py
+import json, requests
+from channels.generic.websocket import AsyncWebsocketConsumer
+from asgiref.sync import sync_to_async
 
-from .services.ai_engine import generate_ai_answer
-from .services.memory import save_memory, fetch_memory
-from .utils.helpers import clean_text
+class AIConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        await self.accept()
 
-class AIConsumer(WebsocketConsumer):
-    def connect(self):
-        self.user = self.scope.get("user")
-        self.accept()
+    async def receive(self, text_data):
+        prompt = json.loads(text_data)["prompt"]
 
-    def receive(self, text_data):
-        data = json.loads(text_data)
-        question = clean_text(data.get("question", ""))
+        response = await sync_to_async(requests.post)(
+            "http://localhost:11434/api/generate",
+            json={"model":"llama3","prompt":prompt,"stream":True},
+            stream=True
+        )
 
-        if not question:
-            self.send(text_data=json.dumps({"error": "Empty question"}))
-            return
+        for line in response.iter_lines():
+            if line:
+                data = json.loads(line.decode())
+                if "response" in data:
+                    await self.send(json.dumps({"token": data["response"]}))
 
-        user = None if isinstance(self.user, AnonymousUser) else self.user
-        memory = fetch_memory(user)
-
-        answer = generate_ai_answer(question, memory)
-
-        save_memory(user, question, answer)
-
-        self.send(text_data=json.dumps({
-            "question": question,
-            "answer": answer
-        })) 
-
+        await self.send(json.dumps({"done": True}))
