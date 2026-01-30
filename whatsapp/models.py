@@ -29,11 +29,13 @@ class Conversation(models.Model):
     )
     question = models.TextField()
     answer = models.TextField()
-    time_taken_seconds = models.FloatField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=30,choices=StatusEnum.choices(),default="processing")
+    time_taken_seconds = models.IntegerField(default=0)
+
 
     def __str__(self):
         return f"{self.user or 'Anonymous'} - {self.created_at}"
     
+ 

@@ -2,7 +2,7 @@ from celery import shared_task
 from .models import *
 from .utils import *
 from django.utils import timezone
-
+import time
 
 
 @shared_task
@@ -14,22 +14,44 @@ def generate_whatsapp_reply(chat_id):
     send_whatsapp_message(chat.phone, reply)
 
 
+# @shared_task
+# def generate_conversation_reply(convo_id):
+#     convo = Conversation.objects.get(id=convo_id)
+
+#     start_time = convo.started_at  # 👈 start time from API
+
+#     answer = ask_ollama(convo.question)
+
+#     end_time = timezone.now()
+
+#     convo.answer = answer
+#     convo.time_taken_seconds = (end_time - start_time).total_seconds()
+#     convo.completed_at = end_time
+#     convo.save()
+
+#     print(
+#         f"Conversation {convo.id} completed in "
+#         f"{convo.time_taken_seconds:.2f} seconds"
+#     )
+
+
 @shared_task
 def generate_conversation_reply(convo_id):
     convo = Conversation.objects.get(id=convo_id)
 
-    start_time = convo.started_at  # 👈 start time from API
+    start = time.time()
 
-    answer = ask_ollama(convo.question)
-
-    end_time = timezone.now()
-
-    convo.answer = answer
-    convo.time_taken_seconds = (end_time - start_time).total_seconds()
-    convo.completed_at = end_time
-    convo.save()
-
-    print(
-        f"Conversation {convo.id} completed in "
-        f"{convo.time_taken_seconds:.2f} seconds"
+    res = requests.post(
+        "http://127.0.0.1:11434/api/generate",
+        json={
+            "model": "llama3:8b",
+            "prompt": convo.question,
+            "stream": False
+        },
+        timeout=180
     )
+
+    convo.answer = res.json().get("response", "")
+    convo.status = "completed"
+    convo.time_taken_seconds = round(time.time() - start, 2)
+    convo.save()
