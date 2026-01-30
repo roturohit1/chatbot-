@@ -11,7 +11,8 @@ import os
 from channels.routing import ProtocolTypeRouter, URLRouter
 from django.core.asgi import get_asgi_application
 from channels.auth import AuthMiddlewareStack
-from whatsapp.routing import websocket_urlpatterns
+# from whatsapp.routing import websocket_urlpatterns
+from AI.routing import websocket_urlpatterns
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'chatbot.settings')
 
@@ -23,3 +24,6 @@ application = ProtocolTypeRouter({
         URLRouter(websocket_urlpatterns)
     ),
 })
+
+
+
