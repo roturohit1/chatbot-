@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,8 +40,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'whatsapp',
-    'chatbot'
-]
+    'chatbot',
+    "AI"
+    # your apps 
+] 
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

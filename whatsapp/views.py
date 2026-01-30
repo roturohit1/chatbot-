@@ -15,8 +15,6 @@ from django.utils import timezone
 
 
 
-
-
 class WhatsAppWebhook(APIView):
     permission_classes = [AllowAny]
 
@@ -66,7 +64,7 @@ class WhatsAppWebhook(APIView):
     #     chat = serializer.save(bot_reply=reply)
 
     #     send_whatsapp_message(phone, reply)
-    #     return Response({"status": "sent"}, status=status.HTTP_200_OK)
+    #     return Response({"status": "sent"}, s tatus=status.HTTP_200_OK)
     
 
 
@@ -150,13 +148,14 @@ class ConverseAPIView(APIView):
         duration = round(time.time() - start_time, 3)  
         print(f"API response time: {duration} seconds")  
 
+
         return Response(
             {
                 "id": convo.id,
                 "status": "processing",
                 "api_time_seconds": duration,       
             },
-            status=status.HTTP_202_ACCEPTED
+            status=status.HTTP_202_ACCEPTED 
         )
 
 class ConversationStatusAPIView(APIView):
@@ -170,4 +169,4 @@ class ConversationStatusAPIView(APIView):
                 "time_taken_seconds": convo.time_taken_seconds
             })
 
-        return Response({"status": "processing"})
+        return Response({"status": "processing"})    
