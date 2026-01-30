@@ -26,5 +26,9 @@ def ask_ollama(prompt: str) -> str:
     return r.json()["response"]
 
 
-def send_whatsapp_message(phone: str, text: str):
+def send_whatsapp_message(phone: str, text: str): 
     pass
+
+
+
+

@@ -15,8 +15,6 @@ from django.utils import timezone
 
 
 
-
-
 class WhatsAppWebhook(APIView):
     permission_classes = [AllowAny]
 
